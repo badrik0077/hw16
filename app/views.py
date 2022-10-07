@@ -59,8 +59,12 @@ def work_user(bid):
         try:
             user = db.session.query(User).get(bid)
             user.id = data.get("id")
+            user.first_name = data.get("first_name")
+            user.last_name = data.get("last_name")
+            user.age = data.get("age")
+            user.email = data.get("email")
             user.role = data.get("role")
-            ...
+            user.phone = data.get("phone")
 
             db.session.commit()
         except Exception as e:
@@ -148,6 +152,44 @@ def work_order(bid):
             status=200
         )
 
+    if request.method == 'PUT':
+        data = request.json
+        try:
+            user = db.session.query(Order).get(bid)
+            user.id = data.get("id")
+            user.name = data.get("name")
+            user.description = data.get("description")
+            user.start_date = data.get("start_date")
+            user.end_date = data.get("end_date")
+            user.address = data.get("address")
+            user.price = data.get("price")
+            user.customer_id = data.get("customer_id")
+            user.executor_id = data.get("executor_id")
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            ...
+
+        return app.response_class(
+            json.dumps("OK"),
+            minetype="application/json",
+            status=200
+        )
+
+    if request.method == 'DELETE':
+        try:
+            db.session.query(Order).filter(User.id == bid).delete()
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            ...
+
+        return app.response_class(
+            json.dumps("OK"),
+            minetype="application/json",
+            status=200
+        )
+
 
 
 @app.route("/offers", methods=['GET', 'POST'])
@@ -211,6 +253,39 @@ def work_offer(bid):
             status=200
         )
 
+    if request.method == 'PUT':
+        data = request.json
+        try:
+            user = db.session.query(Offer).get(bid)
+            user.id = data.get("id")
+            user.order_id = data.get("order_id")
+            user.executor_id = data.get("executor_id")
+
+
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            ...
+
+        return app.response_class(
+            json.dumps("OK"),
+            minetype="application/json",
+            status=200
+        )
+
+    if request.method == 'DELETE':
+        try:
+            db.session.query(Offer).filter(Offer.id == bid).delete()
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            ...
+
+        return app.response_class(
+            json.dumps("OK"),
+            minetype="application/json",
+            status=200
+        )
 
 if __name__ == '__main__':
     app.run("localhost", port=8080, debug=True)
